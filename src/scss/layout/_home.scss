@@ -1,0 +1,47 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.destacado{
+    padding-top: 2rem;
+    color: v.$negro;
+    text-align: center;
+    font-size: 4rem;
+}
+.carousel {
+    position: relative;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+.carousel-item h3 {
+    margin-bottom: 0.5rem;
+}
+.carousel-item p {
+    margin: 0.5rem 0 1rem 0;
+}
+.btn-agregar-carrito {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.btn-agregar-carrito:hover {
+    background-color: #0056b3;
+}
+#carousel-prev, #carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    user-select: none;
+}
+#carousel-prev {
+    left: 10px;
+}
+#carousel-next {
+    right: 10px;
+}

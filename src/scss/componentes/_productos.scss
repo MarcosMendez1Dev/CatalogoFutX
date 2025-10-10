@@ -1,0 +1,87 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.productos {
+  @include m.tablet {
+    display: grid;
+    @include m.grid(3, 1rem);
+    gap: 1rem;
+    justify-content: center;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+  }
+
+  @include m.desktop {
+    display: grid;
+    @include m.grid(4, 1rem);
+    gap: 1rem;
+    justify-content: center;
+    padding: 0 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+
+
+
+    .producto{
+        background-color: v.$blanco;
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        transition: transform 0.3s ease;
+
+        img {
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            max-width: 100%;
+            height: auto;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            color: v.$negro;
+        }
+        .caracteristicas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem; 
+
+  p {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: v.$negro;
+    margin: 0; 
+  }
+
+  button.agregar-carrito {
+    @include m.boton(v.$negro, v.$blanco);
+    max-width: 120px;
+    border-radius: 0.3rem;
+    font-size: 1.2rem;
+    padding: 0.4rem 0.8rem;
+    margin-left: auto; 
+  }
+}
+&:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+    }
+}

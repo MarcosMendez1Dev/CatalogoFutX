@@ -1,16 +1,17 @@
 {
-    "name": "codigoconjuan/app-salon_php_mvc_js_sass",
-    "description": "Proyecto PHP 8, MVC, SQL, SASS, Active Record",
-    "type": "project",
+    "name": "marcos-cano/catalogo",
     "autoload": {
         "psr-4": {
-            "MVC\\" : "./",
-            "Controllers\\" : "./controllers",
-            "Model\\" : "./models",
-            "Classes\\" : "./classes"
+            "Model\\": "models/",
+            "Controllers\\": "controllers/",
+            "MarcosCano\\Catalogo\\": "src/"
         }
     },
-    "require": {
-        "phpmailer/phpmailer": "^6.5"
-    }
+    "authors": [
+        {
+            "name": "Marcos Cano",
+            "email": "canomarcos240@gmail.com"
+        }
+    ],
+    "require": {}
 }

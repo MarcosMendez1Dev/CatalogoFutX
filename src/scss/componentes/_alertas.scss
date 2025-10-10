@@ -1,0 +1,30 @@
+@use 'base/variables' as v;
+
+.alerta{
+    padding: calc(v.$separacion / 4);
+    color: v.$blanco;
+    width: 35rem;
+    display: block;
+    margin: 0 auto 2rem auto;
+    text-align: center;
+    font-weight: v.$bold;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+
+    &.error{
+        background-color: v.$rojo;
+    }
+    &.exito{
+        background-color: v.$verde;
+    }
+
+    &.fade-out {
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        transition: opacity 0.5s ease-out, visibility 0s 0.5s;
+    }
+}

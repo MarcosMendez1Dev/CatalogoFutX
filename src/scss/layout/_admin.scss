@@ -1,0 +1,65 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.botones{
+  @include m.grid(4, 1rem);
+  color: v.$negro;
+  justify-content: center;
+  a{
+    color: v.$negro;
+  }
+   .agregar{
+    @include m.boton(v.$verde, v.$negro);
+   }
+   .editar{
+    @include m.boton(v.$naranja, v.$negro);
+   }
+}
+
+.productos-admin, .ventas, .categorias, .acciones-admin {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  width: 100%;
+}
+.formulario-productos{
+  display: flex;
+  flex-direction: column; 
+  max-width:fit-content;
+  color :v.$negro;
+  padding-left: 10rem;
+  place-content: center;
+
+
+}
+
+
+.ordenes-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+
+  font-size: 2rem;
+  color: v.$negro;
+}
+
+.ordenes-table thead {
+  background-color: v.$gris;
+}
+
+.ordenes-table th,
+.ordenes-table td {
+  border: 1px solid v.$negro;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+.ordenes-table tbody tr:nth-child(even) {
+  background-color: lighten(v.$blanco, 5%);
+}
+
+.ordenes-table tbody tr:hover {
+  background-color: v.$naranja;
+  cursor: default;
+}

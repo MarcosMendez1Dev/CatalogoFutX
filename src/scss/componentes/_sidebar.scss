@@ -1,0 +1,38 @@
+@use '../base/variables.scss' as v;
+@use '../base/mixins.scss' as m;
+
+.sidebar{
+    place-content: right;
+    display: flex;
+    flex-direction: column;
+
+}
+.vertical-tab {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 250px;
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+    }
+.vertical-tab.active {
+    display: flex;
+    }
+
+.barra{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+    align-items: baseline;
+    p{
+        padding-left: 5rem;
+        color: v.$negro;
+        font-size: 2rem;
+    }
+}
