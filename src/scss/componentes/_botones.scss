@@ -2,6 +2,17 @@
 @use 'base/mixins' as m;
 
 .boton{
-    @include m.boton(v.$gris, v.$negro)
+    @include m.boton(v.$azul, v.$blanco);
+    border-radius: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: v.$bold;
+    padding: 1.5rem 3rem;
+    margin-top: 2rem;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 1rem 2rem rgba(0,0,0,0.3);
+    }
 }
 

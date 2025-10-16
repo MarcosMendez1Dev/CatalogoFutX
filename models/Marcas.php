@@ -1,7 +1,7 @@
 <?php
 namespace Model;
 
-class marca extends ActiveRecord{
+class Marcas extends ActiveRecord{
     protected static $tabla ='marcas';
     protected static $columnasDB=['idmarca','nombre','descripcion','imagen'];
 
@@ -10,12 +10,25 @@ class marca extends ActiveRecord{
     public $descripcion;
     public $imagen;
 
-
     public function __construct($args=[]){
-        $this->iddetalle = $args['idmarca'] ?? null;
-        $this->idordenes = $args['nombre'] ?? '';
-        $this->idproducto = $args['descripcion'] ?? '';
-        $this->cantidad = $args['imagen'] ?? '';
+        $this->idmarca = $args['idmarca'] ?? null;
+        $this->nombre = $args['nombre'] ?? '';
+        $this->descripcion = $args['descripcion'] ?? '';
+        $this->imagen = $args['imagen'] ?? '';
+    }
+
+    public function validarMarcas() {
+        self::$alertas = [];
+
+        if (!$this->nombre) {
+            self::$alertas['error'][] = 'El nombre de la marca es obligatorio';
+        }
+
+        if (!$this->descripcion) {
+            self::$alertas['error'][] = 'La descripción es obligatoria';
+        }
+
+        return self::$alertas;
     }
 }
 ?>

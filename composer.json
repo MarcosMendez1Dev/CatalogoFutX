@@ -4,6 +4,7 @@
         "psr-4": {
             "Model\\": "models/",
             "Controllers\\": "controllers/",
+            "Classes\\": "classes/",
             "MarcosCano\\Catalogo\\": "src/"
         }
     },
@@ -13,5 +14,7 @@
             "email": "canomarcos240@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "phpmailer/phpmailer": "^6.8"
+    }
 }

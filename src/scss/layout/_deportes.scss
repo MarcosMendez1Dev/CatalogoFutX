@@ -1,0 +1,350 @@
+// Estilos para la página de deportes
+
+// Variables
+$deportes-primary: #007bff;
+$deportes-secondary: #6c757d;
+$deportes-light: #f8f9fa;
+$deportes-dark: #343a40;
+$deportes-border: #dee2e6;
+$deportes-shadow: 0 2px 4px rgba(0,0,0,0.1);
+$deportes-transition: all 0.3s ease;
+
+// Container
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Navegación de deportes
+.deportes-navbar {
+  background: white;
+  border-bottom: 1px solid $deportes-border;
+  box-shadow: $deportes-shadow;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .deportes-nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .deporte-nav-item {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: $deportes-transition;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      border-color: $deportes-primary;
+      transform: scale(1.05);
+    }
+
+    &.active {
+      border-color: $deportes-primary;
+      box-shadow: 0 0 0 2px rgba($deportes-primary, 0.2);
+    }
+
+    .deporte-nav-img {
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      border-radius: 50%;
+    }
+
+    .deporte-nav-placeholder {
+      width: 100%;
+      height: 100%;
+      background: $deportes-light;
+      color: $deportes-secondary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      border-radius: 50%;
+    }
+  }
+}
+
+// Vista principal de deportes
+.deportes-main {
+  padding: 40px 0;
+
+  .deportes-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    .deportes-title {
+      font-size: 2.5rem;
+      color: $deportes-dark;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .deportes-subtitle {
+      font-size: 1.1rem;
+      color: $deportes-secondary;
+      margin: 0;
+    }
+  }
+
+  .deportes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+
+  .deporte-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $deportes-shadow;
+    transition: $deportes-transition;
+    border: 1px solid $deportes-border;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .deporte-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .deporte-imagen {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: $deportes-transition;
+      }
+
+      &:hover img {
+        transform: scale(1.05);
+      }
+    }
+
+    .deporte-placeholder {
+      height: 200px;
+      background: $deportes-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        font-size: 4rem;
+        color: $deportes-secondary;
+        font-weight: bold;
+      }
+    }
+
+    .deporte-info {
+      padding: 20px;
+
+      .deporte-nombre {
+        font-size: 1.25rem;
+        color: $deportes-dark;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .deporte-descripcion {
+        color: $deportes-secondary;
+        margin: 0;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// Vista de productos de deporte
+.deporte-content {
+  padding: 40px 0;
+
+  .deporte-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    .deporte-title {
+      font-size: 2rem;
+      color: $deportes-dark;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .deporte-name {
+      font-size: 1.5rem;
+      color: $deportes-primary;
+      font-weight: 500;
+    }
+  }
+
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .producto {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $deportes-shadow;
+    transition: $deportes-transition;
+    border: 1px solid $deportes-border;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    a {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: $deportes-transition;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    h3 {
+      padding: 20px 20px 10px;
+      font-size: 1.1rem;
+      color: $deportes-dark;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .caracteristicas {
+      padding: 0 20px 20px;
+
+      p {
+        font-size: 1.2rem;
+        color: $deportes-primary;
+        font-weight: bold;
+        margin: 0 0 15px;
+      }
+
+      .agregar-carrito {
+        width: 100%;
+        padding: 12px 20px;
+        background: $deportes-primary;
+        color: white;
+        border: none;
+        border-radius: 0;
+        font-weight: 500;
+        cursor: pointer;
+        transition: $deportes-transition;
+
+        &:hover {
+          background: darken($deportes-primary, 10%);
+        }
+      }
+    }
+  }
+
+  .no-productos {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: $deportes-shadow;
+
+    p {
+      font-size: 1.1rem;
+      color: $deportes-secondary;
+      margin: 0;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .deportes-main,
+  .deporte-content {
+    padding: 20px 0;
+  }
+
+  .deportes-header .deportes-title,
+  .deporte-header .deporte-title {
+    font-size: 2rem;
+  }
+
+  .deportes-grid,
+  .productos {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .deporte-card,
+  .producto {
+    .deporte-info,
+    .caracteristicas {
+      padding: 15px;
+    }
+  }
+
+  .deportes-navbar .deportes-nav-container {
+    padding: 10px 15px;
+    gap: 10px;
+
+    .deporte-nav-item {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .deportes-grid,
+  .productos {
+    grid-template-columns: 1fr;
+  }
+
+  .deportes-header .deportes-title,
+  .deporte-header .deporte-title {
+    font-size: 1.75rem;
+  }
+
+  .deporte-name {
+    font-size: 1.25rem;
+  }
+}

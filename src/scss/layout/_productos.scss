@@ -1,0 +1,177 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.productos {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: v.$desktop) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (max-width: v.$tablet) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+
+  @media (max-width: v.$telefono) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  // Para teléfonos muy pequeños
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+
+.titulo-productos {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 4rem;
+  color: v.$negro;
+  
+  @media (max-width: v.$tablet) {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  @media (max-width: v.$telefono) {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 2rem;
+  }
+}
+
+.producto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  border: 1px solid v.$gris;
+  border-radius: 0.75rem;
+  background-color: v.$blanco;
+  text-align: center;
+  transition: all 0.3s ease;
+  height: 100%;
+  
+  // Efecto hover para dispositivos que soportan hover
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-color: v.$azul;
+    }
+  }
+
+  @media (max-width: v.$tablet) {
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+  }
+
+  @media (max-width: v.$telefono) {
+    padding: 1rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 1rem;
+    object-fit: cover;
+    
+    @media (max-width: v.$telefono) {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  h3 {
+    color: v.$negro;
+    margin: 0.75rem 0;
+    font-size: 1.50rem;
+    line-height: 1.3;
+    
+    @media (max-width: v.$tablet) {
+      font-size: 1rem;
+      margin: 0.5rem 0;
+    }
+    
+    @media (max-width: 480px) {
+      font-size: 0.95rem;
+    }
+  }
+
+  .caracteristicas {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: auto; // Empuja el contenido hacia abajo
+
+    p {
+      color: v.$negro;
+      margin: 0;
+      font-weight: v.$bold;
+      font-size: 1.2rem;
+      
+      @media (max-width: v.$tablet) {
+        font-size: 0.9rem;
+      }
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: v.$azul;
+      color: v.$blanco;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: v.$bold;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: darken(v.$azul, 10%);
+        transform: scale(1.02);
+      }
+      
+      &:active {
+        transform: scale(0.98);
+      }
+      
+      @media (max-width: v.$tablet) {
+        padding: 0.65rem;
+        font-size: 0.9rem;
+      }
+      
+      @media (max-width: 480px) {
+        padding: 0.6rem;
+      }
+    }
+  }
+}
+
+// Clase adicional para cuando no hay productos
+.productos-vacio {
+  text-align: center;
+  padding: 3rem;
+  color: v.$gris;
+  font-size: 1.2rem;
+  
+  @media (max-width: v.$telefono) {
+    padding: 2rem;
+    font-size: 1rem;
+  }
+}

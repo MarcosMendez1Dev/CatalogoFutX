@@ -75,7 +75,11 @@ class ActiveRecord {
         $atributos = $this->atributos();
         $sanitizado = [];
         foreach($atributos as $key => $value ) {
-            $sanitizado[$key] = self::$db->escape_string($value);
+            if(is_null($value)) {
+                $sanitizado[$key] = 'NULL';
+            } else {
+                $sanitizado[$key] = "'" . self::$db->escape_string($value) . "'";
+            }
         }
         return $sanitizado;
     }
@@ -116,6 +120,13 @@ class ActiveRecord {
         return array_shift( $resultado ) ;
     }
 
+    // Busca un registro por una columna específica
+    public static function where($columna, $valor) {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE {$columna} = '{$valor}' LIMIT 1";
+        $resultado = self::consultarSQL($query);
+        return array_shift($resultado);
+    }
+
     // Obtener Registros con cierta cantidad
     public static function get($limite) {
         $query = "SELECT * FROM " . static::$tabla . " LIMIT {$limite}";
@@ -131,9 +142,9 @@ class ActiveRecord {
         // Insertar en la base de datos
         $query = " INSERT INTO " . static::$tabla . " ( ";
         $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES (' "; 
-        $query .= join("', '", array_values($atributos));
-        $query .= " ') ";
+        $query .= " ) VALUES ( ";
+        $query .= join(", ", array_values($atributos));
+        $query .= " ) ";
 
         // Resultado de la consulta
         $resultado = self::$db->query($query);
@@ -151,14 +162,14 @@ class ActiveRecord {
         // Iterar para ir agregando cada campo de la BD
         $valores = [];
         foreach($atributos as $key => $value) {
-            $valores[] = "{$key}='{$value}'";
+            $valores[] = "{$key}={$value}";
         }
 
         // Consulta SQL
         $query = "UPDATE " . static::$tabla ." SET ";
         $query .=  join(', ', $valores );
         $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
-        $query .= " LIMIT 1 "; 
+        $query .= " LIMIT 1 ";
 
         // Actualizar BD
         $resultado = self::$db->query($query);

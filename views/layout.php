@@ -4,26 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FutX</title>
+    <link rel="icon" type="image/png" href="">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;700;900&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="/build/css/app.css">
+
 </head>
 <body>
 
     <header class="header">
         <div class="header-icons">
-            <div class="home">
-                <a href="/"> <img src="build/img/pagina-de-inicio.webp" alt="Inicio"></a>
-            </div>
-            <div class="carrito">
+            <div class="carrito-icon">
                 <img src="build/img/carrito-de-compras.avif" alt="Carrito de Compras">
             </div>
-        </div>
-        <div class="mobile-menu">
-            <img src="build/img/menu-hamburguesa.webp" alt="Menu Hamburguesa">
+            <div class="login-icon">
+                <?php if(isset($_SESSION['login']) && $_SESSION['login'] === true): ?>
+                    <div class="user-menu">
+                        <img src="build/img/login.avif" alt="Usuario" id="user-icon">
+                        <div class="user-dropdown" id="user-dropdown">
+                            <p>Hola, <?php echo htmlspecialchars($_SESSION['nombre']); ?></p>
+                            <a href="/perfil">Editar Perfil</a>
+                            <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] === "1"): ?>
+                                <a href="/admin">Panel Admin</a>
+                            <?php endif; ?>
+                            <a href="/logout">Cerrar Sesión</a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="/login">
+                        <img src="build/img/login.avif" alt="Inicio de Sesion">
+                    </a>
+                <?php endif; ?>
+            </div>
+            <div class="mobile-menu">
+                <img src="build/img/menu-hamburguesa.webp" alt="Menu Hamburguesa">
+            </div>
         </div>
         <div class="titulo">
-            <h1>Fut<span>X</span></h1>
-            <h3>Futbol Experience</h3>
+            <a href="/">
+                <h1>Fut<span>X</span></h1>
+                <h3>Futbol Experience</h3>
+            </a>
         </div>
         <div class="barra-busqueda">
             <form id="search-form" method="get" action="/buscar">
@@ -39,16 +59,11 @@
         
         <div class="derecha">
             <nav class="navegacion-principal mostrar">
-                    <a href="/productos">Productos</a>
+                    <a href="/deportes">Deportes</a>
                         <a href="/marcas">Marcas</a>
                         <a href="/categorias">Categorias</a>
                         <a href="/sobre-nosotros">Sobre Nosotros</a>
             </nav>
-            <div class="vertical-tab" id="carritoTab">
-                <h2>Carrito de Compras</h2>
-                <p>Aquí va el contenido del carrito.</p>
-                <button id="closeTab">Cerrar</button>
-        </div>
         </div>
     </header>
 
@@ -100,7 +115,10 @@
 </footer>
 
 <section class="carrito" id="carrito">
-    
+    <div id="carrito-contenido">
+        <h2>Carrito de Compras</h2>
+        <p>Cargando...</p>
+    </div>
 </section>
 
 <script src="/build/js/app.js"></script>

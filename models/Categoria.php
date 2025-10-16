@@ -14,5 +14,19 @@ class Categoria extends ActiveRecord{
         $this->descripcion=$args['descripcion'] ?? null;
         $this->imagen=$args['imagen'] ?? null;
     }
+
+    public function validarCategoria() {
+        self::$alertas = [];
+
+        if (!$this->nombre) {
+            self::$alertas['error'][] = 'El nombre de la categoría es obligatorio';
+        }
+
+        if (!$this->descripcion) {
+            self::$alertas['error'][] = 'La descripción es obligatoria';
+        }
+
+        return self::$alertas;
+    }
 }
 ?>

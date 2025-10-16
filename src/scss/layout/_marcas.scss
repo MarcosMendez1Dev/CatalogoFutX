@@ -1,0 +1,350 @@
+// Estilos para la página de marcas
+
+// Variables
+$marcas-primary: #007bff;
+$marcas-secondary: #6c757d;
+$marcas-light: #f8f9fa;
+$marcas-dark: #343a40;
+$marcas-border: #dee2e6;
+$marcas-shadow: 0 2px 4px rgba(0,0,0,0.1);
+$marcas-transition: all 0.3s ease;
+
+// Container
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// Navegación de marcas
+.marcas-navbar {
+  background: white;
+  border-bottom: 1px solid $marcas-border;
+  box-shadow: $marcas-shadow;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .marcas-nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .marca-nav-item {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid transparent;
+    transition: $marcas-transition;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      border-color: $marcas-primary;
+      transform: scale(1.05);
+    }
+
+    &.active {
+      border-color: $marcas-primary;
+      box-shadow: 0 0 0 2px rgba($marcas-primary, 0.2);
+    }
+
+    .marca-nav-img {
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      border-radius: 50%;
+    }
+
+    .marca-nav-placeholder {
+      width: 100%;
+      height: 100%;
+      background: $marcas-light;
+      color: $marcas-secondary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      border-radius: 50%;
+    }
+  }
+}
+
+// Vista principal de marcas
+.marcas-main {
+  padding: 40px 0;
+
+  .marcas-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    .marcas-title {
+      font-size: 2.5rem;
+      color: $marcas-dark;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .marcas-subtitle {
+      font-size: 1.1rem;
+      color: $marcas-secondary;
+      margin: 0;
+    }
+  }
+
+  .marcas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+
+  .marca-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $marcas-shadow;
+    transition: $marcas-transition;
+    border: 1px solid $marcas-border;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .marca-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .marca-imagen {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: $marcas-transition;
+      }
+
+      &:hover img {
+        transform: scale(1.05);
+      }
+    }
+
+    .marca-placeholder {
+      height: 200px;
+      background: $marcas-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        font-size: 4rem;
+        color: $marcas-secondary;
+        font-weight: bold;
+      }
+    }
+
+    .marca-info {
+      padding: 20px;
+
+      .marca-nombre {
+        font-size: 1.25rem;
+        color: $marcas-dark;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .marca-descripcion {
+        color: $marcas-secondary;
+        margin: 0;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+// Vista de productos de marca
+.marca-content {
+  padding: 40px 0;
+
+  .marca-header {
+    text-align: center;
+    margin-bottom: 40px;
+
+    .marca-title {
+      font-size: 2rem;
+      color: $marcas-dark;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .marca-name {
+      font-size: 1.5rem;
+      color: $marcas-primary;
+      font-weight: 500;
+    }
+  }
+
+  .productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .producto {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: $marcas-shadow;
+    transition: $marcas-transition;
+    border: 1px solid $marcas-border;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    }
+
+    a {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      transition: $marcas-transition;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+
+    h3 {
+      padding: 20px 20px 10px;
+      font-size: 1.1rem;
+      color: $marcas-dark;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0;
+    }
+
+    .caracteristicas {
+      padding: 0 20px 20px;
+
+      p {
+        font-size: 1.2rem;
+        color: $marcas-primary;
+        font-weight: bold;
+        margin: 0 0 15px;
+      }
+
+      .agregar-carrito {
+        width: 100%;
+        padding: 12px 20px;
+        background: $marcas-primary;
+        color: white;
+        border: none;
+        border-radius: 0;
+        font-weight: 500;
+        cursor: pointer;
+        transition: $marcas-transition;
+
+        &:hover {
+          background: darken($marcas-primary, 10%);
+        }
+      }
+    }
+  }
+
+  .no-productos {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: $marcas-shadow;
+
+    p {
+      font-size: 1.1rem;
+      color: $marcas-secondary;
+      margin: 0;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+
+  .marcas-main,
+  .marca-content {
+    padding: 20px 0;
+  }
+
+  .marcas-header .marcas-title,
+  .marca-header .marca-title {
+    font-size: 2rem;
+  }
+
+  .marcas-grid,
+  .productos {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .marca-card,
+  .producto {
+    .marca-info,
+    .caracteristicas {
+      padding: 15px;
+    }
+  }
+
+  .marcas-navbar .marcas-nav-container {
+    padding: 10px 15px;
+    gap: 10px;
+
+    .marca-nav-item {
+      width: 50px;
+      height: 50px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .marcas-grid,
+  .productos {
+    grid-template-columns: 1fr;
+  }
+
+  .marcas-header .marcas-title,
+  .marca-header .marca-title {
+    font-size: 1.75rem;
+  }
+
+  .marca-name {
+    font-size: 1.25rem;
+  }
+}

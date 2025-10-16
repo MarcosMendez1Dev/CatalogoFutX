@@ -9,17 +9,17 @@ class Router
 
     public function get($url, $fn)
     {
-        $this->getRoutes[$url] = $fn;
+        $this->getRoutes[] = ['pattern' => $url, 'fn' => $fn];
     }
 
     public function post($url, $fn)
     {
-        $this->postRoutes[$url] = $fn;
+        $this->postRoutes[] = ['pattern' => $url, 'fn' => $fn];
     }
 
     public function comprobarRutas()
     {
-        
+
         // Proteger Rutas...
         session_start();
 
@@ -32,11 +32,18 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method === 'GET') {
-            $fn = $this->getRoutes[$currentUrl] ?? null;
+            $routes = $this->getRoutes;
         } else {
-            $fn = $this->postRoutes[$currentUrl] ?? null;
+            $routes = $this->postRoutes;
         }
 
+        $fn = null;
+        foreach ($routes as $route) {
+            if ($this->matchRoute($route['pattern'], $currentUrl)) {
+                $fn = $route['fn'];
+                break;
+            }
+        }
 
         if ( $fn ) {
             // Call user fn va a llamar una función cuando no sabemos cual sera
@@ -44,6 +51,13 @@ class Router
         } else {
             echo "Página No Encontrada o Ruta no válida";
         }
+    }
+
+    private function matchRoute($pattern, $url)
+    {
+        // Simple pattern matching for routes with parameters
+        $pattern = preg_replace('/\{([^}]+)\}/', '([^/]+)', $pattern);
+        return preg_match("#^$pattern$#", $url);
     }
 
     public function render($view, $datos = [])
