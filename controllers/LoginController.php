@@ -4,6 +4,7 @@ namespace Controllers;
 use Controllers\LoginController;
 
 use Model\Usuario;
+use Model\Ordenes;
 use MVC\Router;
 use Classes\Email;
 
@@ -88,6 +89,44 @@ class LoginController {
         $router->render('auth/perfil', [
             'usuario' => $usuario,
             'alertas' => $alertas
+        ]);
+    }
+
+    public static function historial(Router $router){
+        if(session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        if(!isset($_SESSION['login']) || $_SESSION['login'] !== true){
+            header('Location: /login');
+            exit;
+        }
+
+        $consulta = "SELECT
+        o.idordenes,
+        o.departamento,
+        o.municipio,
+        o.direccion_exacta,
+        o.estado,
+        o.telefono,
+        o.fecha,
+        p.nombre AS producto,
+        d.talla,
+        d.cantidad,
+        d.precio_unitario,
+        (d.cantidad * d.precio_unitario) AS subtotal,
+        o.total AS total_orden
+    FROM ordenes AS o
+    INNER JOIN detalleorden AS d
+        ON o.idordenes = d.idordenes
+    INNER JOIN productos AS p
+        ON d.idproducto = p.id
+    WHERE o.idcliente = {$_SESSION['id']}
+    ORDER BY o.idordenes DESC";
+
+        $ordenes = \Model\Ordenes::consultarSQL($consulta);
+
+        $router->render('auth/historial', [
+            'ordenes' => $ordenes
         ]);
     }
     public static function olvide(Router $router){

@@ -19,11 +19,11 @@ class Email{
 
        // Looking to send emails in production? Check out our Email API/SMTP product!
        $mail->isSMTP(TRUE);
-       $mail->Host = 'sandbox.smtp.mailtrap.io';
+       $mail->Host = $_ENV['EMAIL_HOST'];
        $mail->SMTPAuth = true;
-       $mail->Port = 2525;
-       $mail->Username = 'db96df2801b678';
-       $mail->Password = '8c5f30011ba5f4';
+       $mail->Port = $_ENV['EMAIL_PORT'];
+       $mail->Username = $_ENV['EMAIL_USER'];
+       $mail->Password = $_ENV['EMAIL_PASS'];
 
        $mail->setFrom('cuentas@appsalon.com');
 
@@ -36,7 +36,7 @@ class Email{
 
        $contenido = "<html>";
        $contenido .= "<p><strong>Hola ".$this->nombre . "</strong> Te has convertido en un Cavernicola. Para confirmarlo presiona en el siguiente enlace</p>";
-       $contenido .="<p>Presiona aquí: <a href='http://localhost:8000/confirmar-cuenta?token=".$this->token ."'>Confirmar Cuenta</a></p>";
+       $contenido .="<p>Presiona aquí: <a href='". $_EMV['PROJECT_URL']    ."/confirmar-cuenta?token=".$this->token ."'>Confirmar Cuenta</a></p>";
        $contenido .= "<p>Si tu no solicitaste esta cuenta, puedes ignorar el mensaje</p>";
        $contenido .= "</html>";
 
@@ -51,11 +51,11 @@ class Email{
        $mail = new PHPMailer();
 
        $mail->isSMTP(TRUE);
-       $mail->Host = 'sandbox.smtp.mailtrap.io';
+       $mail->Host = $_ENV['EMAIL_HOST'];
        $mail->SMTPAuth = true;
-       $mail->Port = 2525;
-       $mail->Username = 'db96df2801b678';
-       $mail->Password = '8c5f30011ba5f4';
+       $mail->Port = $_ENV['EMAIL_PORT'];
+       $mail->Username = $_ENV['EMAIL_USER'];
+       $mail->Password = $_ENV['EMAIL_PASS'];
 
        $mail->setFrom('cuentas@appsalon.com');
 
@@ -68,7 +68,7 @@ class Email{
 
        $contenido = "<html>";
        $contenido .= "<p><strong>Hola ".$this->nombre . "</strong> Has solicitado restablecer tu contraseña, sigue el siguiente enlace para hacerlo</p>";
-       $contenido .="<p>Presiona aquí: <a href='http://localhost:3000/recuperar?token=".$this->token ."'>Restablecer Contraseña</a></p>";
+       $contenido .="<p>Presiona aquí: <a href='". $_EMV['PROJECT_URL']    ."/recuperar?token=".$this->token ."'>Restablecer Contraseña</a></p>";
        $contenido .= "<p>Si tu no solicitaste esta cuenta, puedes ignorar el mensaje</p>";
        $contenido .= "</html>";
 

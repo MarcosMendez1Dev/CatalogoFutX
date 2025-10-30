@@ -9,12 +9,6 @@ $marcas-border: #dee2e6;
 $marcas-shadow: 0 2px 4px rgba(0,0,0,0.1);
 $marcas-transition: all 0.3s ease;
 
-// Container
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
 
 // Navegación de marcas
 .marcas-navbar {
@@ -333,6 +327,57 @@ $marcas-transition: all 0.3s ease;
   }
 }
 
+
+//Editar Marca
+.seleccionar-marca {
+  margin-bottom: 2rem;
+}
+.seleccionar-marca h2 {
+  color: black;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.marcas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.marca {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.3s;
+}
+.marca:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.marca a {
+  text-decoration: none;
+  color: inherit;
+}
+.marca h3 {
+  color: black;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+.formulario fieldset legend {
+  color: black;
+}
+.campo label {
+  color: black;
+}
+.imagen-actual img {
+  border-radius: 4px;
+}
+.ayuda {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+
+//RESPONSIVE
 @media (max-width: 480px) {
   .marcas-grid,
   .productos {

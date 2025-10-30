@@ -1,4 +1,5 @@
 <div class="dashboard">
+    <?php include_once __DIR__ . '/../templates/alertas.php'; ?>
     <h1><?php echo 'Bienvenido ' . $nombre; ?></h1>
     <h2>Panel de Administración</h2>
 
@@ -37,36 +38,38 @@
 
     <div class="ordenes-pendientes">
         <h2>Órdenes Pendientes</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID Orden</th>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Cliente</th>
-                    <th>Email</th>
-                    <th>Teléfono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($ordenes as $orden): ?>
-                <tr>
-                    <td><?php echo $orden->id; ?></td>
-                    <td><?php echo $orden->producto; ?></td>
-                    <td><?php echo $orden->precio; ?></td>
-                    <td><?php echo $orden->stock; ?></td>
-                    <td><?php echo $orden->nombre . ' ' . $orden->apellido; ?></td>
-                    <td><?php echo $orden->email; ?></td>
-                    <td><?php echo $orden->telefono; ?></td>
-                    <td>
-                        <a href="/admin/orden/<?php echo $orden->id; ?>/aprobar" class="btn">Aprobar</a>
-                        <a href="/admin/orden/<?php echo $orden->id; ?>/rechazar" class="btn">Rechazar</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="compact-table">
+                <thead>
+                    <tr>
+                        <th>ID Orden</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Cliente</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach($ordenes as $orden): ?>
+                    <tr>
+                        <td><?php echo $orden->idordenes; ?></td>
+                        <td><?php echo $orden->producto; ?></td>
+                        <td><?php echo $orden->precio_unitario; ?></td>
+                        <td><?php echo $orden->cantidad; ?></td>
+                        <td><?php echo $orden->cliente; ?></td>
+                        <td><?php echo $orden->email; ?></td>
+                        <td><?php echo $orden->telefono; ?></td>
+                        <td>
+                            <a href="/admin/orden/<?php echo $orden->idordenes; ?>/aprobar" class="btn btn-small">Aprobar</a>
+                            <a href="/admin/orden/<?php echo $orden->idordenes; ?>/rechazar" class="btn btn-small">Rechazar</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

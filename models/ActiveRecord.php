@@ -63,8 +63,9 @@ class ActiveRecord {
     // Identificar y unir los atributos de la BD
     public function atributos() {
         $atributos = [];
+        $idColumna = static::$columnasDB[0];
         foreach(static::$columnasDB as $columna) {
-            if($columna === 'id') continue;
+            if($columna === $idColumna) continue;
             $atributos[$columna] = $this->$columna;
         }
         return $atributos;
@@ -115,7 +116,9 @@ class ActiveRecord {
 
     // Busca un registro por su id
     public static function find($id) {
-        $query = "SELECT * FROM " . static::$tabla  ." WHERE id = {$id}";
+        $columnasDB = static::$columnasDB;
+        $idColumna = $columnasDB[0];
+        $query = "SELECT * FROM " . static::$tabla  ." WHERE {$idColumna} = {$id}";
         $resultado = self::consultarSQL($query);
         return array_shift( $resultado ) ;
     }
@@ -148,6 +151,9 @@ class ActiveRecord {
 
         // Resultado de la consulta
         $resultado = self::$db->query($query);
+        if ($resultado) {
+            $this->{static::$columnasDB[0]} = self::$db->insert_id;
+        }
         return [
            'resultado' =>  $resultado,
            'id' => self::$db->insert_id
@@ -166,9 +172,10 @@ class ActiveRecord {
         }
 
         // Consulta SQL
+        $idColumna = static::$columnasDB[0];
         $query = "UPDATE " . static::$tabla ." SET ";
         $query .=  join(', ', $valores );
-        $query .= " WHERE id = '" . self::$db->escape_string($this->id) . "' ";
+        $query .= " WHERE {$idColumna} = '" . self::$db->escape_string($this->$idColumna) . "' ";
         $query .= " LIMIT 1 ";
 
         // Actualizar BD
@@ -178,7 +185,8 @@ class ActiveRecord {
 
     // Eliminar un Registro por su ID
     public function eliminar() {
-        $query = "DELETE FROM "  . static::$tabla . " WHERE id = " . self::$db->escape_string($this->id) . " LIMIT 1";
+        $idColumna = static::$columnasDB[0];
+        $query = "DELETE FROM "  . static::$tabla . " WHERE {$idColumna} = " . self::$db->escape_string($this->$idColumna) . " LIMIT 1";
         $resultado = self::$db->query($query);
         return $resultado;
     }

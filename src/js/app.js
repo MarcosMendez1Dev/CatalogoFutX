@@ -1,3 +1,20 @@
+ // Función para mostrar alertas
+function mostrarAlerta(tipo, mensaje) {
+    const alerta = document.createElement('div');
+    alerta.className = `alerta ${tipo}`;
+    alerta.setAttribute('data-temporizador', '');
+    alerta.textContent = mensaje;
+    document.body.appendChild(alerta);
+
+    // Auto-remover después de 5 segundos
+    setTimeout(() => {
+        alerta.classList.add('fade-out');
+        setTimeout(() => {
+            alerta.remove();
+        }, 500);
+    }, 5000);
+}
+
 // Toggle carrito sidebar
 document.addEventListener('DOMContentLoaded', function() {
     const carritoIcon = document.querySelector('.carrito-icon');
@@ -38,6 +55,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Toggle mobile menu
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const navegacionPrincipal = document.querySelector('.navegacion-principal');
+
+    if (mobileMenu && navegacionPrincipal) {
+        mobileMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            navegacionPrincipal.classList.toggle('mostrar');
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function(e) {
+            if (!navegacionPrincipal.contains(e.target) && !mobileMenu.contains(e.target)) {
+                navegacionPrincipal.classList.remove('mostrar');
+            }
+        });
+    }
+
     // Event listeners para botones agregar al carrito
     document.addEventListener('click', function(e) {
         if (e.target.classList.contains('agregar-carrito')) {
@@ -59,18 +94,17 @@ function agregarAlCarrito(id) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            alert(data.message);
+            mostrarAlerta('exito', data.message);
             // Opcional: cargar carrito si está abierto
             if (document.querySelector('.carrito').classList.contains('mostrar')) {
                 cargarCarrito();
             }
         } else {
-            alert(data.message);
+            mostrarAlerta('error', data.message);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Error al agregar al carrito');
+        mostrarAlerta('error', 'Error al agregar al carrito');
     });
 }
 
@@ -92,12 +126,12 @@ function agregarEventListenersCarrito() {
     document.querySelectorAll('.btn-menos').forEach(btn => {
         btn.addEventListener('click', function() {
             const item = this.closest('.carrito-item');
-            const id = item.getAttribute('data-id');
+            const clave = item.getAttribute('data-clave');
             const cantidadSpan = item.querySelector('.cantidad');
             let cantidad = parseInt(cantidadSpan.textContent);
             if (cantidad > 1) {
                 cantidad--;
-                actualizarCantidad(id, cantidad);
+                actualizarCantidad(clave, cantidad);
             }
         });
     });
@@ -105,11 +139,11 @@ function agregarEventListenersCarrito() {
     document.querySelectorAll('.btn-mas').forEach(btn => {
         btn.addEventListener('click', function() {
             const item = this.closest('.carrito-item');
-            const id = item.getAttribute('data-id');
+            const clave = item.getAttribute('data-clave');
             const cantidadSpan = item.querySelector('.cantidad');
             let cantidad = parseInt(cantidadSpan.textContent);
             cantidad++;
-            actualizarCantidad(id, cantidad);
+            actualizarCantidad(clave, cantidad);
         });
     });
 
@@ -117,8 +151,8 @@ function agregarEventListenersCarrito() {
     document.querySelectorAll('.btn-eliminar').forEach(btn => {
         btn.addEventListener('click', function() {
             const item = this.closest('.carrito-item');
-            const id = item.getAttribute('data-id');
-            eliminarDelCarrito(id);
+            const clave = item.getAttribute('data-clave');
+            eliminarDelCarrito(clave);
         });
     });
 
@@ -138,47 +172,44 @@ function agregarEventListenersCarrito() {
     });
 }
 
-function actualizarCantidad(id, cantidad) {
+function actualizarCantidad(clave, cantidad) {
     fetch('/carrito/actualizar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: 'id=' + encodeURIComponent(id) + '&cantidad=' + encodeURIComponent(cantidad)
+        body: 'clave=' + encodeURIComponent(clave) + '&cantidad=' + encodeURIComponent(cantidad)
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             cargarCarrito();
         } else {
-            alert(data.message);
+            mostrarAlerta('error', data.message);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Error al actualizar cantidad');
+        mostrarAlerta('error', 'Error al actualizar cantidad');
     });
 }
-
-function eliminarDelCarrito(id) {
+function eliminarDelCarrito(clave) {
     fetch('/carrito/eliminar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: 'id=' + encodeURIComponent(id)
+        body: 'clave=' + encodeURIComponent(clave)
     })
     .then(response => response.json())
     .then(data => {
         if (data.success) {
             cargarCarrito();
         } else {
-            alert(data.message);
+            mostrarAlerta('error', data.message);
         }
     })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Error al eliminar producto');
+        mostrarAlerta('error', 'Error al eliminar producto');
     });
 }
 

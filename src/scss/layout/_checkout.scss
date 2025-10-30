@@ -1,0 +1,222 @@
+.contenedor.seccion {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.nombre-pagina {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: .5rem;
+}
+
+.descripcion-pagina {
+    text-align: center;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.opcion {
+    background: #fff;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.checkout-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.checkout-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.checkout-item:last-child {
+    border-bottom: none;
+}
+
+.item-imagen img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.item-info {
+    flex: 1;
+}
+
+.item-info h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #222;
+}
+
+.item-info p {
+    margin: 4px 0;
+    color: #444;
+    font-size: .95rem;
+}
+
+.checkout-total {
+    text-align: right;
+    margin-top: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #111;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.campo label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: .3rem;
+}
+
+.campo input, 
+.campo textarea {
+    width: 100%;
+    padding: .7rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: .95rem;
+}
+
+.campo textarea {
+    min-height: 80px;
+}
+
+.boton-verde {
+    background: #28a745;
+    color: #fff;
+    padding: .9rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background .3s ease;
+}
+
+.boton-verde:hover {
+    background: #218838;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h3 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.modal-content p {
+    margin-bottom: 1.5rem;
+    color: #666;
+}
+
+.modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-buttons a {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-whatsapp {
+    background-color: #25d366;
+    color: white;
+}
+
+.btn-whatsapp:hover {
+    background-color: #128c7e;
+}
+
+.btn-instagram {
+    background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+    color: white;
+}
+
+.btn-instagram:hover {
+    opacity: 0.8;
+}
+
+.btn-facebook {
+    background-color: #1877f2;
+    color: white;
+}
+
+.btn-facebook:hover {
+    background-color: #166fe5;
+}
+
+.btn-close {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-close:hover {
+    background-color: #5a6268;
+}
+
+/* 📱 Responsivo */
+@media (max-width: 600px) {
+    .checkout-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item-imagen img {
+        width: 100%;
+        height: auto;
+    }
+
+    .checkout-total {
+        text-align: left;
+    }
+}
+

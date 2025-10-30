@@ -75,8 +75,26 @@
             </div>
 
             <div class="campo">
-                <label for="terreno">Terreno</label>
-                <input type="text" id="terreno" name="terreno" placeholder="Terreno" value="<?php echo s($producto->terreno); ?>" required>
+                <label for="terreno_id">Terreno</label>
+                <select id="terreno_id" name="terreno_id" required>
+                    <option value="">-- Seleccionar Terreno --</option>
+                    <?php foreach($terrenos as $terreno): ?>
+                        <option value="<?php echo $terreno->idterreno; ?>" <?php echo ($producto->terreno_id == $terreno->idterreno) ? 'selected' : ''; ?>>
+                            <?php echo s($terreno->nombre); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="silueta">Silueta</label>
+                <input type="text" id="silueta" name="silueta" placeholder="Silueta" value="<?php echo s($producto->silueta); ?>" required>
+            </div>
+
+            <div class="campo">
+                <label for="tallas">Tallas Disponibles</label>
+                <input type="text" id="tallas" name="tallas" placeholder="Ej: S,M,L,XL,XXL" value="<?php echo is_array($producto->tallas) ? implode(',', $producto->tallas) : s($producto->tallas); ?>" required>
+                <p class="ayuda">Separa las tallas con comas (ej: S,M,L,XL)</p>
             </div>
 
             <div class="campo">

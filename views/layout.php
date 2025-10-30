@@ -10,6 +10,10 @@
 
 </head>
 <body>
+<?php
+require_once __DIR__ . '/../includes/app.php';
+$categorias = \Model\Categoria::consultarSQL("SELECT * FROM categorias LIMIT 5");
+?>
 
     <header class="header">
         <div class="header-icons">
@@ -23,6 +27,7 @@
                         <div class="user-dropdown" id="user-dropdown">
                             <p>Hola, <?php echo htmlspecialchars($_SESSION['nombre']); ?></p>
                             <a href="/perfil">Editar Perfil</a>
+                            <a href="/historial">Historial de Pedidos</a>
                             <?php if(isset($_SESSION['admin']) && $_SESSION['admin'] === "1"): ?>
                                 <a href="/admin">Panel Admin</a>
                             <?php endif; ?>
@@ -48,7 +53,7 @@
         <div class="barra-busqueda">
             <form id="search-form" method="get" action="/buscar">
                 <fieldset>
-                    <input type="text" id="search-input" name="q" placeholder="Buscar...">
+                    <input type="text" id="search-input" name="q" placeholder="Buscar productos..." required>
                         <button type="submit">
                         <i class="search-icon">Buscar</i>
                         </button>
@@ -58,7 +63,7 @@
         
         
         <div class="derecha">
-            <nav class="navegacion-principal mostrar">
+            <nav class="navegacion-principal">
                     <a href="/deportes">Deportes</a>
                         <a href="/marcas">Marcas</a>
                         <a href="/categorias">Categorias</a>
@@ -82,11 +87,10 @@
         <div class="categorias-container">
             <div class="categorias">
                 <h2>Categorias</h2>
-                <nav class="navegacion-footer ">
-                        <a href="/productos">Futbol</a>
-                        <a href="/categorias">Basketball</a>
-                        <a href="/armar-tu-setup">Gimnasio</a>
-                        <a href="/sobre-nosotros">Tenis/Padel</a>
+                <nav class="navegacion-footer">
+                <?php foreach ($categorias as $categoria): ?>
+                    <a href="/categorias?id=<?= htmlspecialchars($categoria->idcategoria) ?>"><?= htmlspecialchars($categoria->nombre) ?></a>
+                <?php endforeach; ?>
                 </nav>
             </div>
 

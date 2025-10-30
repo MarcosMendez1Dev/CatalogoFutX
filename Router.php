@@ -17,9 +17,8 @@ class Router
         $this->postRoutes[] = ['pattern' => $url, 'fn' => $fn];
     }
 
-    public function comprobarRutas()
-    {
-
+    public function comprobarRutas()    {
+        $currentUrl=strtok($_SERVER['REQUEST_URI'],'?');
         // Proteger Rutas...
         session_start();
 
@@ -28,7 +27,10 @@ class Router
 
         // $auth = $_SESSION['login'] ?? null;
 
-        $currentUrl = $_SERVER['PATH_INFO'] ?? '/';
+        $currentUrl = str_replace('/index.php', '', parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) ?? '/';
+        if ($currentUrl === '') {
+            $currentUrl = '/';
+        }
         $method = $_SERVER['REQUEST_METHOD'];
 
         if ($method === 'GET') {

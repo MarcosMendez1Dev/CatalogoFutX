@@ -17,17 +17,22 @@ class Deportes extends ActiveRecord{
     }
 
     public function validarDeporte() {
-        self::$alertas = [];
-
-        if (!$this->nombre) {
-            self::$alertas['error'][] = 'El nombre del deporte es obligatorio';
+        $alertas = [];
+    
+        if(!$this->nombre) {
+            $alertas['error'][] = 'El nombre del deporte es obligatorio';
         }
-
-        if (!$this->descripcion) {
-            self::$alertas['error'][] = 'La descripción del deporte es obligatoria';
+    
+        if(!$this->descripcion) {
+            $alertas['error'][] = 'La descripción del deporte es obligatoria';
         }
-
-        return self::$alertas;
+    
+        // If no image is set and this is a new record
+        if(!$this->imagen && !$this->id) {
+            $alertas['error'][] = 'La imagen del deporte es obligatoria';
+        }
+    
+        return $alertas; // Always returns an array
     }
 }
 ?>

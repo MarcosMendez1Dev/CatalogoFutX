@@ -3,6 +3,9 @@ namespace Controllers;
 
 use MVC\Router;
 use Model\Productos;
+use Model\Usuario;
+use Model\Ordenes;
+use Model\DetalleOrden;
 
 class CarritoController {
 
@@ -13,6 +16,7 @@ class CarritoController {
         }
 
         $id = $_POST['id'] ?? null;
+        $talla = $_POST['talla'] ?? null;
         if (!$id || !is_numeric($id)) {
             echo json_encode(['success' => false, 'message' => 'ID de producto inválido']);
             return;
@@ -24,19 +28,23 @@ class CarritoController {
             return;
         }
 
-        if ($producto->stock <= 0) {
-            echo json_encode(['success' => false, 'message' => 'Producto sin stock']);
-            return;
-        }
+        // Permitir agregar productos con stock 0 (productos internacionales)
 
-        if (isset($_SESSION['carrito'][$id])) {
-            if ($_SESSION['carrito'][$id] >= $producto->stock) {
+        // Crear clave única para producto con talla
+        $clave = $id . '_' . $talla;
+
+        if (isset($_SESSION['carrito'][$clave])) {
+            if ($producto->stock > 0 && $_SESSION['carrito'][$clave]['cantidad'] >= $producto->stock) {
                 echo json_encode(['success' => false, 'message' => 'No hay suficiente stock']);
                 return;
             }
-            $_SESSION['carrito'][$id]++;
+            $_SESSION['carrito'][$clave]['cantidad']++;
         } else {
-            $_SESSION['carrito'][$id] = 1;
+            $_SESSION['carrito'][$clave] = [
+                'id' => $id,
+                'talla' => $talla,
+                'cantidad' => 1
+            ];
         }
 
         echo json_encode(['success' => true, 'message' => 'Producto agregado al carrito']);
@@ -44,29 +52,35 @@ class CarritoController {
 
     public static function actualizar() {
         // session_start() ya se llama en Router.php
-        $id = $_POST['id'] ?? null;
+        $clave = $_POST['clave'] ?? null;
         $cantidad = $_POST['cantidad'] ?? null;
 
-        if (!$id || !is_numeric($id) || !$cantidad || !is_numeric($cantidad) || $cantidad < 0) {
+        if (!$clave || !$cantidad || !is_numeric($cantidad) || $cantidad < 0) {
             echo json_encode(['success' => false, 'message' => 'Datos inválidos']);
             return;
         }
 
+        if (!isset($_SESSION['carrito'][$clave])) {
+            echo json_encode(['success' => false, 'message' => 'Producto no encontrado en el carrito']);
+            return;
+        }
+
+        $id = $_SESSION['carrito'][$clave]['id'];
         $producto = Productos::find($id);
         if (!$producto) {
             echo json_encode(['success' => false, 'message' => 'Producto no encontrado']);
             return;
         }
 
-        if ($cantidad > $producto->stock) {
+        if ($producto->stock > 0 && $cantidad > $producto->stock) {
             echo json_encode(['success' => false, 'message' => 'Cantidad supera el stock disponible']);
             return;
         }
 
         if ($cantidad == 0) {
-            unset($_SESSION['carrito'][$id]);
+            unset($_SESSION['carrito'][$clave]);
         } else {
-            $_SESSION['carrito'][$id] = $cantidad;
+            $_SESSION['carrito'][$clave]['cantidad'] = $cantidad;
         }
 
         echo json_encode(['success' => true, 'message' => 'Cantidad actualizada']);
@@ -74,14 +88,14 @@ class CarritoController {
 
     public static function eliminar() {
         // session_start() ya se llama en Router.php
-        $id = $_POST['id'] ?? null;
+        $clave = $_POST['clave'] ?? null;
 
-        if (!$id || !is_numeric($id)) {
-            echo json_encode(['success' => false, 'message' => 'ID inválido']);
+        if (!$clave) {
+            echo json_encode(['success' => false, 'message' => 'Clave inválida']);
             return;
         }
 
-        unset($_SESSION['carrito'][$id]);
+        unset($_SESSION['carrito'][$clave]);
         echo json_encode(['success' => true, 'message' => 'Producto eliminado']);
     }
 
@@ -91,13 +105,27 @@ class CarritoController {
         $productos = [];
         $total = 0;
 
-        foreach ($carrito as $id => $cantidad) {
+        foreach ($carrito as $clave => $item) {
+            if (is_array($item)) {
+                // Nuevo formato: ['id' => ..., 'talla' => ..., 'cantidad' => ...]
+                $id = $item['id'];
+                $talla = $item['talla'];
+                $cantidad = $item['cantidad'];
+            } else {
+                // Formato antiguo: $carrito[$id] = cantidad
+                $id = $clave;
+                $talla = '';
+                $cantidad = $item;
+            }
+
             $producto = Productos::find($id);
             if ($producto) {
                 $productos[] = [
+                    'clave' => $clave,
                     'id' => $producto->id,
                     'nombre' => $producto->nombre,
                     'precio' => $producto->precio,
+                    'talla' => $talla,
                     'cantidad' => $cantidad,
                     'subtotal' => $producto->precio * $cantidad,
                     'imagen' => !empty($producto->imagenes) ? $producto->imagenes[0] : ''
@@ -114,10 +142,11 @@ class CarritoController {
         <?php else: ?>
             <div class="carrito-items">
                 <?php foreach ($productos as $item): ?>
-                    <div class="carrito-item" data-id="<?= $item['id'] ?>">
+                    <div class="carrito-item" data-clave="<?= $item['clave'] ?>">
                         <img src="/imagenes/<?= htmlspecialchars($item['imagen']) ?>" alt="<?= htmlspecialchars($item['nombre']) ?>" width="50">
                         <div class="item-info">
                             <h4><?= htmlspecialchars($item['nombre']) ?></h4>
+                            <p>Talla: <?= htmlspecialchars($item['talla']) ?></p>
                             <p>Q<?= number_format($item['precio'], 2) ?></p>
                             <div class="cantidad-controls">
                                 <button class="btn-menos">-</button>
@@ -145,13 +174,14 @@ class CarritoController {
 
     public static function checkout($router) {
         // session_start() ya se llama en Router.php
-        if (!isset($_SESSION['login'])) {
-            header('Location: /login');
-            return;
-        }
 
         $carrito = $_SESSION['carrito'] ?? [];
         if (empty($carrito)) {
+            // Para solicitudes AJAX, devolver JSON en lugar de redirigir
+            if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+                echo json_encode(['success' => false, 'message' => 'El carrito está vacío', 'redirect' => '/']);
+                return;
+            }
             header('Location: /');
             return;
         }
@@ -161,106 +191,153 @@ class CarritoController {
             $productos = [];
             $total = 0;
 
-            foreach ($carrito as $id => $cantidad) {
-                $producto = Productos::find($id);
+            foreach ($carrito as $clave => $item) {
+                $producto = Productos::find($item['id']);
                 if ($producto) {
                     $productos[] = [
                         'id' => $producto->id,
                         'nombre' => $producto->nombre,
                         'precio' => $producto->precio,
-                        'cantidad' => $cantidad,
-                        'subtotal' => $producto->precio * $cantidad
+                        'talla' => $item['talla'],
+                        'cantidad' => $item['cantidad'],
+                        'subtotal' => $producto->precio * $item['cantidad'],
+                        'imagen' => !empty($producto->imagenes) ? $producto->imagenes[0] : ''
                     ];
-                    $total += $producto->precio * $cantidad;
+                    $total += $producto->precio * $item['cantidad'];
                 }
             }
 
-            // Obtener datos del usuario
-            $usuario = \Model\Usuario::find($_SESSION['id']);
+            // Obtener datos del usuario solo si está logeado
+            $usuario = isset($_SESSION['login']) ? Usuario::find($_SESSION['id']) : null;
 
-            $router->render('checkout', [
+            $router->render('auth/checkout', [
                 'productos' => $productos,
                 'total' => $total,
                 'usuario' => $usuario
             ]);
         } else {
             // Procesar formulario de checkout
-            $nombre = $_POST['nombre'] ?? '';
-            $apellido = $_POST['apellido'] ?? '';
-            $direccion = $_POST['direccion'] ?? '';
-            $telefono = $_POST['telefono'] ?? '';
-            $nit = $_POST['nit'] ?? '';
+            header('Content-Type: application/json; charset=utf-8');
+            ini_set('display_errors', 0);
+            error_reporting(0);
+            ob_clean(); // Limpiar cualquier salida previa
 
-            if (empty($nombre) || empty($apellido) || empty($direccion) || empty($telefono)) {
-                echo json_encode(['success' => false, 'message' => 'Todos los campos marcados con * son obligatorios']);
-                return;
-            }
+            try {
+                $nombre = trim($_POST['nombre'] ?? '');
+                $apellido = trim($_POST['apellido'] ?? '');
+                $departamento = trim($_POST['departamento'] ?? '');
+                $municipio = trim($_POST['municipio'] ?? '');
+                $direccion_exacta = trim($_POST['direccion_exacta'] ?? '');
+                $telefono = trim($_POST['telefono'] ?? '');
+                $nit = trim($_POST['nit'] ?? '');
 
-            // Verificar stock antes de proceder
-            foreach ($carrito as $id => $cantidad) {
-                $producto = Productos::find($id);
-                if (!$producto || $producto->stock < $cantidad) {
-                    echo json_encode(['success' => false, 'message' => 'Stock insuficiente para ' . $producto->nombre]);
-                    return;
+                if (empty($nombre) || empty($apellido) || empty($departamento) || empty($municipio) || empty($direccion_exacta) || empty($telefono)) {
+                    ob_clean();
+                    echo json_encode(['success' => false, 'message' => 'Todos los campos marcados con * son obligatorios']);
+                    exit;
                 }
-            }
 
-            // Crear orden
-            $orden = new \Model\Ordenes([
-                'idcliente' => $_SESSION['id'],
-                'direccion' => $direccion,
-                'total' => array_sum(array_map(function($id, $cantidad) {
-                    $producto = Productos::find($id);
-                    return $producto ? $producto->precio * $cantidad : 0;
-                }, array_keys($carrito), $carrito)),
-                'estado' => 'pendiente',
-                'telefono' => $telefono,
-                'fecha' => date('Y-m-d H:i:s')
-            ]);
+                // Verificar stock antes de proceder (solo para productos con stock > 0)
+                foreach ($carrito as $clave => $item) {
+                    $producto = Productos::find($item['id']);
+                    if (!$producto || ($producto->stock > 0 && $producto->stock < $item['cantidad'])) {
+                        ob_clean();
+                        echo json_encode(['success' => false, 'message' => 'Stock insuficiente para ' . ($producto->nombre ?? 'un producto')]);
+                        exit;
+                    }
+                }
 
-            $resultado = $orden->guardar();
-            if (!$resultado) {
-                echo json_encode(['success' => false, 'message' => 'Error al crear la orden']);
-                return;
-            }
+                // Crear orden
+                $total = array_sum(array_map(function($clave, $item) {
+                    $producto = Productos::find($item['id']);
+                    return $producto ? $producto->precio * $item['cantidad'] : 0;
+                }, array_keys($carrito), $carrito));
 
-            // Crear detalles de orden y actualizar stock
-            foreach ($carrito as $id => $cantidad) {
-                $producto = Productos::find($id);
-                $detalle = new \Model\detalleOrden([
-                    'idordenes' => $orden->idordenes,
-                    'idproducto' => $id,
-                    'cantidad' => $cantidad,
-                    'precio_unitario' => $producto->precio
+                $orden = new Ordenes([
+                    'idcliente' => isset($_SESSION['login']) ? $_SESSION['id'] : null,
+                    'departamento' => $departamento,
+                    'municipio' => $municipio,
+                    'direccion_exacta' => $direccion_exacta,
+                    'total' => $total,
+                    'estado' => 'pendiente',
+                    'telefono' => $telefono,
+                    'fecha' => date('Y-m-d H:i:s')
                 ]);
-                $detalle->guardar();
 
-                // Actualizar stock
-                $producto->stock -= $cantidad;
-                $producto->guardar();
+                $resultado = $orden->guardar();
+                if (!$resultado['resultado']) {
+                    ob_clean();
+                    echo json_encode(['success' => false, 'message' => 'Error al crear la orden']);
+                    exit;
+                }
+
+                // Crear detalles de orden y actualizar stock (solo para productos con stock > 0)
+                foreach ($carrito as $clave => $item) {
+                    $producto = Productos::find($item['id']);
+                    $detalle = new DetalleOrden([
+                        'idordenes' => $orden->idordenes,
+                        'idproducto' => $item['id'],
+                        'talla' => $item['talla'] ?? '',
+                        'cantidad' => $item['cantidad'],
+                        'precio_unitario' => $producto->precio
+                    ]);
+                    $resultado_detalle = $detalle->guardar();
+                    if (!$resultado_detalle['resultado']) {
+                        ob_clean();
+                        echo json_encode(['success' => false, 'message' => 'Error al crear detalle de orden']);
+                        exit;
+                    }
+
+                    // Actualizar stock solo si el producto tiene stock > 0
+                    if ($producto->stock > 0) {
+                        $producto->stock -= $item['cantidad'];
+                        $producto->guardar();
+                    }
+                }
+
+                // Preparar mensaje para WhatsApp antes de vaciar carrito
+                $mensaje = "Hola, he realizado un pedido. Número de orden: {$orden->idordenes}\n\n";
+                $total_calculado = 0;
+                foreach ($carrito as $clave => $item) {
+                    $producto = Productos::find($item['id']);
+                    if ($producto) {
+                        $subtotal = $producto->precio * $item['cantidad'];
+                        $total_calculado += $subtotal;
+                        $mensaje .= "- {$producto->nombre} (Talla: {$item['talla']}) x{$item['cantidad']} = Q" . number_format($subtotal, 2) . "\n";
+                    }
+                }
+
+                // Vaciar carrito
+                unset($_SESSION['carrito']);
+                $mensaje .= "\nTotal: Q" . number_format($total_calculado, 2);
+                $mensaje .= "\nDirección: {$departamento}, {$municipio}, {$direccion_exacta}";
+                $mensaje .= "\nTeléfono: {$telefono}";
+                if (!empty($nit)) {
+                    $mensaje .= "\nNIT: {$nit}";
+                }
+                $mensaje .= "\n\nPor favor, confirmar el pago por transferencia/depósito.";
+
+                $mensaje_encoded = urlencode($mensaje);
+                $whatsapp_url = "https://wa.me/50235654214?text={$mensaje_encoded}"; // Reemplazar con número real
+                $instagram_url = "https://www.instagram.com/direct/inbox/?text={$mensaje_encoded}";
+                $facebook_url = "https://www.facebook.com/messages/t/17hNjJzkEE?text={$mensaje_encoded}";
+
+                ob_clean();
+                echo json_encode([
+                    'success' => true,
+                    'order_id' => $orden->idordenes,
+                    'message' => "Compra iniciada. Número de orden: {$orden->idordenes}. Para adquirir los productos, continúa la compra en Facebook, Instagram o WhatsApp. Debes cancelar el producto primero para poder proseguir.",
+                    'whatsapp_url' => $whatsapp_url,
+                    'instagram_url' => $instagram_url,
+                    'facebook_url' => $facebook_url
+                ]);
+                exit;
+            } catch (\Throwable $e) {
+                error_log('Error en checkout: ' . $e->getMessage());
+                ob_clean();
+                echo json_encode(['success' => false, 'message' => 'Error interno del servidor: ' . $e->getMessage()]);
+                exit;
             }
-
-            // Vaciar carrito
-            unset($_SESSION['carrito']);
-
-            // Preparar mensaje para WhatsApp
-            $mensaje = "Hola, he realizado un pedido:\n\n";
-            foreach ($carrito as $id => $cantidad) {
-                $producto = Productos::find($id);
-                $mensaje .= "- {$producto->nombre} x{$cantidad} = Q" . number_format($producto->precio * $cantidad, 2) . "\n";
-            }
-            $mensaje .= "\nTotal: Q" . number_format($orden->total, 2);
-            $mensaje .= "\nDirección: {$direccion}";
-            $mensaje .= "\nTeléfono: {$telefono}";
-            if (!empty($nit)) {
-                $mensaje .= "\nNIT: {$nit}";
-            }
-            $mensaje .= "\n\nPor favor, confirmar el pago por transferencia/depósito.";
-
-            $mensaje_encoded = urlencode($mensaje);
-            $whatsapp_url = "https://wa.me/50212345678?text={$mensaje_encoded}"; // Reemplazar con número real
-
-            echo json_encode(['success' => true, 'whatsapp_url' => $whatsapp_url]);
         }
     }
 }

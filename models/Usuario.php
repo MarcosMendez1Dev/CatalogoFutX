@@ -2,7 +2,7 @@
 namespace Model;
 class Usuario extends ActiveRecord{
     protected static $tabla = 'usuarios';
-    protected static $columnasDB = ['id','nombre','apellido','password','email','telefono','nit','token','nacimiento','confirmado','admin'];
+    protected static $columnasDB = ['id','nombre','apellido','password','email','telefono','nit','token','nacimiento','confirmado','admin','departamento','municipio','direccion_exacta'];
     public $id;
     public $nombre;
     public $apellido;
@@ -14,6 +14,9 @@ class Usuario extends ActiveRecord{
     public $nacimiento;
     public $confirmado;
     public $admin;
+    public $departamento;
+    public $municipio;
+    public $direccion_exacta;
 
     public function __construct($args=[]){
         $this->id=$args['id'] ?? null;
@@ -27,6 +30,9 @@ class Usuario extends ActiveRecord{
         $this->nacimiento=$args['nacimiento'] ?? null;
         $this->confirmado=$args['confirmado'] ?? 0;
         $this->admin=$args['admin'] ?? 0;
+        $this->departamento=$args['departamento'] ?? '';
+        $this->municipio=$args['municipio'] ?? '';
+        $this->direccion_exacta=$args['direccion_exacta'] ?? '';
     }
 
     public function validarLogin() {

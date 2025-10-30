@@ -1,0 +1,113 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.contenedor.seccion {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.nombre-pagina {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: v.$negro;
+}
+
+.ordenes-historial {
+    margin-top: 2rem;
+}
+
+.orden {
+    background: #fff;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.orden h3 {
+    margin-bottom: 1rem;
+    color: v.$negro;
+    font-size: 1.5rem;
+}
+
+.orden p {
+    margin-bottom: 0.5rem;
+    color: #555;
+}
+
+.tabla-ordenes {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.tabla-ordenes th,
+.tabla-ordenes td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.tabla-ordenes th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: v.$negro;
+}
+
+.tabla-ordenes td {
+    color: #333;
+}
+
+.total-orden {
+    text-align: right;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: v.$negro;
+}
+
+.acciones {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.acciones a {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: v.$gris;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.acciones a:hover {
+    background-color: darken(v.$gris, 10%);
+}
+
+/* 📱 Responsivo */
+@media (max-width: 768px) {
+    .contenedor.seccion {
+        padding: 1rem;
+    }
+
+    .nombre-pagina {
+        font-size: 2rem;
+    }
+
+    .orden {
+        padding: 1rem;
+    }
+
+    .tabla-ordenes th,
+    .tabla-ordenes td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .orden h3 {
+        font-size: 1.2rem;
+    }
+}

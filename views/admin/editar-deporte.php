@@ -1,16 +1,26 @@
+<style>
+</style>
+
 <div class="dashboard">
-    <h1>Editar Deporte</h1>
+    <h1 style="color: black;">Editar Deporte</h1>
 
     <?php include_once __DIR__ . '/../templates/alertas.php'; ?>
 
     <?php if(isset($deportes) && !isset($deporte)): ?>
         <div class="seleccionar-deporte">
             <h2>Seleccionar Deporte a Editar</h2>
-            <ul>
+            <div class="deportes">
                 <?php foreach($deportes as $dep): ?>
-                    <li><a href="/admin/editar-deporte?id=<?php echo $dep->iddeporte; ?>"><?php echo $dep->nombre; ?></a></li>
+                    <div class="deporte">
+                        <a href="/admin/editar-deporte?id=<?php echo $dep->iddeporte; ?>">
+                            <?php if (!empty($dep->imagen)): ?>
+                                <img src="/imagenes/<?= htmlspecialchars($dep->imagen) ?>" alt="<?= htmlspecialchars($dep->nombre) ?>" width="150">
+                            <?php endif; ?>
+                            <h3><?= htmlspecialchars($dep->nombre) ?></h3>
+                        </a>
+                    </div>
                 <?php endforeach; ?>
-            </ul>
+            </div>
         </div>
     <?php else: ?>
 
@@ -31,9 +41,20 @@
             </div>
 
             <div class="campo">
-                <label for="imagen">Imagen del Deporte</label>
+                <label>Imagen Actual del Deporte</label>
+                <div class="imagen-actual">
+                    <?php if (!empty($deporte->imagen)): ?>
+                        <img src="/imagenes/<?= htmlspecialchars($deporte->imagen) ?>" alt="Imagen del deporte" width="150">
+                    <?php else: ?>
+                        <p style="color: black;">No hay imagen actual.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label for="imagen">Cambiar Imagen del Deporte</label>
                 <input type="file" id="imagen" name="imagen" accept="image/*">
-                <p class="ayuda">Selecciona una nueva imagen si deseas cambiarla (JPG, PNG, GIF). Si no seleccionas una nueva imagen, se mantendrá la actual.</p>
+                <p class="ayuda">Deja vacío si no quieres cambiar la imagen (JPG, PNG, GIF).</p>
             </div>
         </fieldset>
 

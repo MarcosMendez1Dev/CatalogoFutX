@@ -68,7 +68,22 @@ class HomeController{
             ]);
         }
     }
-
+    public static function producto(Router $router){
+        if(!isset($_GET['id']) || !is_numeric($_GET['id'])){
+            header('Location: /productos');
+            exit;
+        }
+        $id = (int) $_GET['id'];
+        $producto = Producto::find($id);
+        if(!$producto){
+            header('Location: /productos');
+            exit;
+        }
+        $router->render('auth/producto', [
+            'producto' => $producto
+        ]);
+    }
+    
     public static function sobreNosotros(Router $router){
         $router->render('auth/sobre-nosotros');
     }

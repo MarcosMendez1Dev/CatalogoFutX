@@ -6,7 +6,7 @@ class Productos extends ActiveRecord {
     protected static $columnasDB = [
         'id','nombre','colorway','descripcion','categoria_id',
         'marca','stock','imagenes','precio','costo',
-        'destacado','deporte_id','terreno'
+        'destacado','deporte_id','terreno_id','silueta','tallas'
     ];
 
     public $id;
@@ -21,7 +21,9 @@ class Productos extends ActiveRecord {
     public $costo;
     public $destacado;
     public $deporte_id;
-    public $terreno;
+    public $terreno_id;
+    public $silueta;
+    public $tallas;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
@@ -35,7 +37,9 @@ class Productos extends ActiveRecord {
         $this->costo = $args['costo'] ?? 0;
         $this->destacado = $args['destacado'] ?? 0;
         $this->deporte_id = $args['deporte_id'] ?? null;
-        $this->terreno = $args['terreno'] ?? '';
+        $this->terreno_id = $args['terreno_id'] ?? null;
+        $this->silueta = $args['silueta'] ?? '';
+        $this->tallas = $args['tallas'] ?? '';
 
         // 🧩 Manejo robusto de imágenes (JSON, string o array)
         if (!empty($args['imagenes'])) {
@@ -46,6 +50,8 @@ class Productos extends ActiveRecord {
                 $decoded = json_decode($imagenes, true);
                 if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
                     $this->imagenes = $decoded;
+                } elseif ($decoded === true || $decoded === false || is_null($decoded) || !is_array($decoded)) {
+                    $this->imagenes = [];
                 } else {
                     // Si es una cadena separada por comas → convertir a array
                     $lista = array_filter(array_map('trim', explode(',', $imagenes)));
@@ -55,9 +61,37 @@ class Productos extends ActiveRecord {
                 $this->imagenes = array_values(array_filter($imagenes));
             } else {
                 $this->imagenes = [];
-            }   
+            }
         } else {
             $this->imagenes = [];
+        }
+
+        // Ensure imagenes is always an array
+        if (!is_array($this->imagenes)) {
+            $this->imagenes = [];
+        }
+
+        // 🧩 Manejo robusto de tallas (JSON, string o array)
+        if (!empty($args['tallas'])) {
+            $tallas = $args['tallas'];
+
+            if (is_string($tallas)) {
+                // Si es JSON válido → decodificar
+                $decoded = json_decode($tallas, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $this->tallas = $decoded;
+                } else {
+                    // Si es una cadena separada por comas → convertir a array
+                    $lista = array_filter(array_map('trim', explode(',', $tallas)));
+                    $this->tallas = $lista ?: [];
+                }
+            } elseif (is_array($tallas)) {
+                $this->tallas = array_values(array_filter($tallas));
+            } else {
+                $this->tallas = [];
+            }
+        } else {
+            $this->tallas = [];
         }
     }
 
@@ -71,6 +105,9 @@ class Productos extends ActiveRecord {
                 $objeto = parent::crearObjeto($registro);
                 if (method_exists($objeto, 'procesarImagenes')) {
                     $objeto->procesarImagenes();
+                }
+                if (method_exists($objeto, 'procesarTallas')) {
+                    $objeto->procesarTallas();
                 }
                 return $objeto;
             }
@@ -100,6 +137,31 @@ class Productos extends ActiveRecord {
         }
     }
 
+    // ✅ Procesar tallas después de cargar desde DB
+    public function procesarTallas() {
+        if (!empty($this->tallas)) {
+            $tallas = $this->tallas;
+
+            if (is_string($tallas)) {
+                // Si es JSON válido → decodificar
+                $decoded = json_decode($tallas, true);
+                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                    $this->tallas = $decoded;
+                } else {
+                    // Si es una cadena separada por comas → convertir a array
+                    $lista = array_filter(array_map('trim', explode(',', $tallas)));
+                    $this->tallas = $lista ?: [];
+                }
+            } elseif (is_array($tallas)) {
+                $this->tallas = array_values(array_filter($tallas));
+            } else {
+                $this->tallas = [];
+            }
+        } else {
+            $this->tallas = [];
+        }
+    }
+
     // ✅ Evita doble codificación del JSON
     public function atributos() {
         $atributos = [];
@@ -115,6 +177,16 @@ class Productos extends ActiveRecord {
                     $atributos[$columna] = $this->imagenes; // ya es JSON
                 } else {
                     $atributos[$columna] = json_encode(explode(',', $this->imagenes), JSON_UNESCAPED_SLASHES);
+                }
+            } elseif ($columna === 'tallas') {
+                if (empty($this->tallas)) {
+                    $atributos[$columna] = null;
+                } elseif (is_array($this->tallas)) {
+                    $atributos[$columna] = json_encode($this->tallas, JSON_UNESCAPED_SLASHES);
+                } elseif ($this->isJson($this->tallas)) {
+                    $atributos[$columna] = $this->tallas; // ya es JSON
+                } else {
+                    $atributos[$columna] = json_encode(explode(',', $this->tallas), JSON_UNESCAPED_SLASHES);
                 }
             } else {
                 $atributos[$columna] = $this->$columna;
@@ -142,8 +214,10 @@ class Productos extends ActiveRecord {
             self::$alertas['error'][] = 'El costo debe ser un número positivo';
         if (!$this->deporte_id || !is_numeric($this->deporte_id))
             self::$alertas['error'][] = 'Debe seleccionar un deporte válido';
-        if (!$this->terreno)
-            self::$alertas['error'][] = 'El terreno es obligatorio';
+        if (!$this->terreno_id || !is_numeric($this->terreno_id))
+            self::$alertas['error'][] = 'Debe seleccionar un terreno válido';
+        if (!$this->silueta)
+            self::$alertas['error'][] = 'La silueta es obligatoria';
 
         return self::$alertas;
     }

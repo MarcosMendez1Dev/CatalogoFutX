@@ -15,7 +15,6 @@
         </a>
         <div class="caracteristicas">
           <p>Q<?= htmlspecialchars($producto->precio) ?></p>
-          <button data-id="<?= htmlspecialchars($producto->id) ?>" class="agregar-carrito">Agregar al carrito</button>
         </div>
       </div>
     <?php endforeach; ?>

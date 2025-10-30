@@ -56,7 +56,7 @@ function procesarImagenes(file, outputSubDir) {
     fs.copyFileSync(file, outputFile);
     } else {
         // For other image formats, process them with sharp
-        const outputFile = path.join(outputSubDir, `${baseName}${extName}`);
+        const outputFile = path.join(outputSubDir, `${baseName}.jpg`);
         const outputFileWebp = path.join(outputSubDir, `${baseName}.webp`);
         const outputFileAvif = path.join(outputSubDir, `${baseName}.avif`);
         const options = { quality: 80 };
@@ -70,7 +70,8 @@ function procesarImagenes(file, outputSubDir) {
 export function dev() {
     watch( paths.scss, css );
     watch( paths.js, js );
-    watch('src/img/**/*.{png,jpg}', imagenes)
+    watch('src/img/**/*.{png,jpg,jpeg,svg}', imagenes)
 }
 
-export default series( js, css, imagenes, dev )
+export default series( js, css, imagenes, dev );
+export const build = series(js, css, imagenes);

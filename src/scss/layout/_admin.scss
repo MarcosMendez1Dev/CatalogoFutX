@@ -46,11 +46,16 @@
     color: v.$negro;
   }
 
-  table {
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .compact-table {
     width: 100%;
     border-collapse: collapse;
     background-color: v.$blanco;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
   }
 
   thead {
@@ -59,8 +64,9 @@
 
   th, td {
     border: 1px solid v.$negro;
-    padding: 0.75rem;
+    padding: 0.5rem 0.75rem;
     text-align: left;
+    vertical-align: middle;
   }
 
   tbody tr:nth-child(even) {
@@ -75,7 +81,13 @@
     @include m.boton(v.$verde, v.$blanco);
     text-decoration: none;
     padding: 0.25rem 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    margin: 0.1rem;
+  }
+
+  .btn-small {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.75rem;
   }
 }
 

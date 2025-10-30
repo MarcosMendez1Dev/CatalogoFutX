@@ -130,6 +130,11 @@ h3 {
     display: flex;
     list-style: none;
     gap: 20px;
+
+    @media (max-width: v.$telefono) {
+        display: none;
+    }
+
     a {
         font-weight: 700;
         font-size: 1.5rem;
@@ -476,7 +481,7 @@ h3 {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: v.$telefono) {
     .header {
         padding: 10px 15px;
         max-width: 100%;
@@ -484,9 +489,7 @@ h3 {
     .mobile-menu {
         display: block;
     }
-    .navegacion-principal {
-        display: none; /* Oculta en mobile, se maneja con JS para menú hamburguesa */
-    }
+
     .navegacion-principal.mostrar {
         display: flex;
         flex-direction: column;
@@ -497,6 +500,20 @@ h3 {
         background: #fff;
         padding: 20px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+        a {
+            color: #000;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            &:hover {
+                color: v.$rojo;
+            }
+        }
     }
     h1 {
         font-size: 1.5rem;

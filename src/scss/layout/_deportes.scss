@@ -292,6 +292,55 @@ $deportes-transition: all 0.3s ease;
   }
 }
 
+//Editar Deporte
+
+.seleccionar-deporte {
+  margin-bottom: 2rem;
+}
+.seleccionar-deporte h2 {
+  color: black;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+.deportes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.deporte {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.3s;
+}
+.deporte:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.deporte a {
+  text-decoration: none;
+  color: inherit;
+}
+.deporte h3 {
+  color: black;
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+.formulario fieldset legend {
+  color: black;
+}
+.campo label {
+  color: black;
+}
+.imagen-actual img {
+  border-radius: 4px;
+}
+.ayuda {
+  color: #666;
+  font-size: 0.9rem;
+}
+
 // Responsive
 @media (max-width: 768px) {
   .container {

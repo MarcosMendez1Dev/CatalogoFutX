@@ -6,6 +6,7 @@ require_once __DIR__ . '/../Router.php';
 
 use MVC\Router;
 
+
 $router = new Router();
 
 // Ruta de inicio
@@ -15,6 +16,7 @@ $router->get('/marcas', [Controllers\HomeController::class, 'marcas']);
 $router->get('/categorias', [Controllers\HomeController::class, 'categorias']);
 $router->get('/sobre-nosotros', [Controllers\HomeController::class, 'sobreNosotros']);
 $router->get('/productos_por_categoria', [Controllers\HomeController::class, 'productosPorCategoria']);
+$router->get('/producto', [Controllers\HomeController::class, 'producto']);
 
 
 
@@ -25,6 +27,7 @@ $router->post('/login', [Controllers\LoginController::class, 'login']);
 $router->get('/logout', [Controllers\LoginController::class, 'logout']);
 $router->get('/perfil', [Controllers\LoginController::class, 'perfil']);
 $router->post('/perfil', [Controllers\LoginController::class, 'perfil']);
+$router->get('/historial', [Controllers\LoginController::class, 'historial']);
 $router->get('/olvide', [Controllers\LoginController::class, 'olvide']);
 $router->post('/olvide', [Controllers\LoginController::class, 'olvide']);
 $router->get('/recuperar', [Controllers\LoginController::class, 'recuperar']);
@@ -65,6 +68,9 @@ $router->post('/carrito/eliminar', [Controllers\CarritoController::class, 'elimi
 $router->get('/carrito/ver', [Controllers\CarritoController::class, 'ver']);
 $router->get('/checkout', [Controllers\CarritoController::class, 'checkout']);
 $router->post('/checkout', [Controllers\CarritoController::class, 'checkout']);
+
+// Ruta de búsqueda
+$router->get('/buscar', [Controllers\BuscarController::class, 'buscar']);
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();
